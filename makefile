@@ -9,3 +9,9 @@ $(APP): $(SRC)
 
 test: $(APP)
 	./$(APP) debug
+
+install: $(APP)
+	cp $(APP) /usr/local/bin/$(APP)
+
+uninstall:
+	rm /usr/local/bin/$(APP)

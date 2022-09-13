@@ -53,15 +53,15 @@ int main(int argc, char* argv[]) {
 
   // Draw Start Screen
   attron(A_BOLD | A_UNDERLINE);
-  mvaddstr( 3, 5, "----------------");
+  mvaddstr( 3, 5, "Mandelbrot Zoom");
   attroff(A_UNDERLINE);
   mvaddstr( 5, 7, "Key bindings:");
   attroff(A_BOLD);
-  mvaddstr( 6, 9, ".");
-  mvaddstr( 7, 9, ".");
-  mvaddstr( 8, 9, ".");
-  mvaddstr( 9, 9, ".");
-  mvaddstr(10, 9, ".");
+  mvaddstr( 6, 9, "WASD  Move around");
+  mvaddstr( 7, 9, "HJKL  Move around");
+  mvaddstr( 8, 9, "+     Zoom in");
+  mvaddstr( 9, 9, "-     Zoom out");
+  mvaddstr(10, 9, "q     Quit");
   attron(A_BOLD);
   mvaddstr(12, 7, "Press any key to start...");
   attroff(A_BOLD);
