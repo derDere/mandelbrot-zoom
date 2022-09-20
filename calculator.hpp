@@ -8,8 +8,6 @@
 
 class View {
   private:
-    long double center_x;
-    long double center_y;
     long double size;
     long double depth;
     long double infinity;
@@ -19,6 +17,9 @@ class View {
     unsigned int screen_size_rows;
 
   public:
+    long double center_x;
+    long double center_y;
+
     View(unsigned int, unsigned int);
     ~View();
 

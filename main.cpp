@@ -2,6 +2,9 @@
 #define MAIN_CPP
 
 #include <iostream>
+#include <limits>
+#include <iomanip>
+#include <cstdlib>
 #include <ncursesw/ncurses.h>
 #include "calculator.hpp"
 
@@ -15,6 +18,8 @@ using namespace std;
 
 void quit();
 
+View* view;
+
 /**
  * Project: mandelbrot-zoom
  * Creator: deremer
@@ -22,6 +27,8 @@ void quit();
  */
 int main(int argc, char* argv[]) {
   bool asciiMode = false;
+  long double arg_x = 0, arg_y = 0;
+  bool arg_x_set = false;
 
   for(int i = 0; i < argc; i++) {
     string arg(argv[i]);
@@ -36,6 +43,18 @@ int main(int argc, char* argv[]) {
     ) {
       cout << "Hilfe kommt noch" << endl;
       return 0;
+    } else {
+      try {
+        long double val = stold(arg);
+        if (!arg_x_set) {
+          arg_x = val;
+          arg_x_set = true;
+        } else {
+          arg_y = val;
+        }
+      } catch (const exception& ex) {
+        // No action needed invalid args will be ignored
+      }
     }
   }
 
@@ -71,7 +90,9 @@ int main(int argc, char* argv[]) {
   int cols, rows;
   getmaxyx(stdscr, rows, cols);
 
-  View* view = new View(cols, rows);
+  view = new View(cols, rows);
+  view->center_x = arg_x;
+  view->center_y = arg_y;
 
   int key = ' ';
   const char* values[13] = {
@@ -143,6 +164,9 @@ int main(int argc, char* argv[]) {
 
 void quit() {
   endwin();
+
+  cout << setprecision(numeric_limits<long double>::max_digits10)
+       << view->center_x << " " << view->center_y << endl;
 }
 
 #endif
