@@ -41,7 +41,26 @@ int main(int argc, char* argv[]) {
       (arg == "help") ||
       (arg == "--help")
     ) {
-      cout << "Hilfe kommt noch" << endl;
+      cout << "Usage: mandelbrot-zoom [options] [center_x] [center_y]" << endl
+           << endl
+           << "Options:" << endl
+           << "  -a          Activates ASCII mode. Use this mode if you" << endl
+           << "              are having trouble displaying blocks in your terminal." << endl
+           << endl
+           << "Arguments:" << endl
+           << "  center_x    Sets the center value on the X axis." << endl
+           << "  center_y    Sets the center value of the Y axis." << endl
+           << endl
+           << "About:" << endl
+           << "  This application provides a zoomable/movable view of the mandelbrot set." << endl
+           << endl
+           << "Key bindings:" << endl
+           << "  WASD        Move around" << endl
+           << "  HJKL        Move around" << endl
+           << "  +           Zoom in" << endl
+           << "  -           Zoom out" << endl
+           << "  q           Quit" << endl
+           << endl;
       return 0;
     } else {
       try {
@@ -165,7 +184,8 @@ int main(int argc, char* argv[]) {
 void quit() {
   endwin();
 
-  cout << setprecision(numeric_limits<long double>::max_digits10)
+  cout << "Zoomed center at: "
+       << setprecision(numeric_limits<long double>::max_digits10)
        << view->center_x << " " << view->center_y << endl;
 }
 
