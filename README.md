@@ -31,6 +31,15 @@ While the renderer is running you can use the following keybindings:
  - Zoom in and out using (+) or (-)
  - You can quit using (q)
 
+### Different keyboard layouts
+Colemak
+```sh
+mandelbrot-zoom -c
+```
+Dvorak
+```sh
+mandelbrot-zoom -d
+```
 
 ## Uninstall
 Run the following command:
