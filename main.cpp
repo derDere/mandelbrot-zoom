@@ -1,6 +1,8 @@
 #ifndef MAIN_CPP
 #define MAIN_CPP
 
+#include <cctype>
+#include <cstring>
 #include <iostream>
 #include <limits>
 #include <iomanip>
@@ -17,23 +19,58 @@
 using namespace std;
 
 void quit();
-
+std::string getWasdName();
+std::string getHjklName();
 View* view;
-
+enum KeyboardLayout{
+  QWERTY,
+  COLEMAK,
+  DVORAK
+};
 /**
  * Project: mandelbrot-zoom
  * Creator: deremer
  * Creation Date: Tue Sep 13 11:31:51 CEST 2022
  */
+ KeyboardLayout keyboardLayout = QWERTY;
+  std::string keyboardLayoutNames[3] = {"QWERTY", "Colemak", "Dvorak"};
+  char keys[size(keyboardLayoutNames)][8] = {
+    {'w','a', 's', 'd', 'h', 'j', 'k', 'l'},
+    {'w','a', 'r', 's', 'h', 'n', 'e', 'i'},
+    {'<','a', 'o', 'e', 'd', 'h', 't', 'n'}
+  };
+
+  std::string getWasdName(){
+    std::string wasdName = "";
+    for(int i = 0; i <= 3; i++){
+      wasdName += toupper(keys[keyboardLayout][i]);
+    }
+    return wasdName;
+  }
+
+  std::string getHjklName(){
+    std::string hjklName = "";
+    for(int i = 4; i <= 7; i++){
+      hjklName += toupper(keys[keyboardLayout][i]);
+    }
+    return hjklName;
+  }
+
 int main(int argc, char* argv[]) {
   bool asciiMode = false;
   long double arg_x = 0, arg_y = 0;
-  bool arg_x_set = false;
+  bool arg_x_set = false;  
 
   for(int i = 0; i < argc; i++) {
     string arg(argv[i]);
     if (arg == "-a") {
       asciiMode = true;
+    }
+    else if(arg == "-c"){
+        keyboardLayout = COLEMAK;
+    }
+    else if(arg == "-d"){
+        keyboardLayout = DVORAK;
     }
     else if (
       (arg == "-?") ||
@@ -46,6 +83,8 @@ int main(int argc, char* argv[]) {
            << "Options:" << endl
            << "  -a          Activates ASCII mode. Use this mode if you" << endl
            << "              are having trouble displaying blocks in your terminal." << endl
+           << "  -c          Use Colemak keybindings." << endl
+           << "  -d          Use Dvorak keybindings." << endl
            << endl
            << "Arguments:" << endl
            << "  center_x    Sets the center value on the X axis." << endl
@@ -55,8 +94,8 @@ int main(int argc, char* argv[]) {
            << "  This application provides a zoomable/movable view of the mandelbrot set." << endl
            << endl
            << "Key bindings:" << endl
-           << "  WASD        Move around" << endl
-           << "  HJKL        Move around" << endl
+           << "  WASD (WARS, <AOE)        Move around" << endl
+           << "  HJKL (HNEI, DHTN)        Move around" << endl
            << "  +           Zoom in" << endl
            << "  -           Zoom out" << endl
            << "  q           Quit" << endl
@@ -95,13 +134,14 @@ int main(int argc, char* argv[]) {
   attroff(A_UNDERLINE);
   mvaddstr( 5, 7, "Key bindings:");
   attroff(A_BOLD);
-  mvaddstr( 6, 9, "WASD  Move around");
-  mvaddstr( 7, 9, "HJKL  Move around");
+  mvaddstr( 6, 9, (getWasdName()+"  Move around").c_str());
+  mvaddstr( 7, 9, (getHjklName()+"  Move around").c_str());
   mvaddstr( 8, 9, "+     Zoom in");
   mvaddstr( 9, 9, "-     Zoom out");
   mvaddstr(10, 9, "q     Quit");
+  mvaddstr(11, 9, ("Keyboard: "+keyboardLayoutNames[keyboardLayout]).c_str());
   attron(A_BOLD);
-  mvaddstr(12, 7, "Press any key to start...");
+  mvaddstr(13, 7, "Press any key to start...");
   attroff(A_BOLD);
   getch();
   nodelay(win, true);
@@ -147,37 +187,26 @@ int main(int argc, char* argv[]) {
       }
     }
     key = getch();
-    switch(key) {
-      case KEY_RESIZE:
+    //case statements do not support variables, replacing with else if
+    
+      if(key == KEY_RESIZE){
           getmaxyx(stdscr, rows, cols);
           view->resize(cols, rows);
           erase();
-        break;
-      case 'h':
-      case 'a':
+      }
+      else if(key == keys[keyboardLayout][4] || key == keys[keyboardLayout][1])
           view->moveLeft();
-        break;
-      case 'w':
-      case 'k':
+      else if(key == keys[keyboardLayout][6] || key == keys[keyboardLayout][0])
           view->moveUp();
-        break;
-      case 's':
-      case 'j':
+      else if(key == keys[keyboardLayout][5] || key == keys[keyboardLayout][2])
           view->moveDown();
-        break;
-      case 'l':
-      case 'd':
+      else if(key == keys[keyboardLayout][7] || key == keys[keyboardLayout][3])
           view->moveRight();
-        break;
-      case '+':
+      else if(key == '+')
           view->zoomIn();
-        break;
-      case '-':
+      else if(key == '-')
           view->zoomOut();
-        break;
     }
-  }
-
   return 0;
 }
 
